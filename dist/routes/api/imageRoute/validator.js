@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.widthValidator = exports.heightValidator = exports.fileNameValidator = void 0;
+exports.validationErrorFormatter = exports.widthValidator = exports.heightValidator = exports.fileNameValidator = void 0;
 const express_validator_1 = require("express-validator");
 const fileNameValidator = (0, express_validator_1.query)('fileName')
     .notEmpty()
@@ -20,3 +20,7 @@ const widthValidator = (0, express_validator_1.query)('width')
     .isNumeric()
     .withMessage('Width must be number');
 exports.widthValidator = widthValidator;
+const validationErrorFormatter = ({ msg, param }) => {
+    return `${param}: ${msg}`;
+};
+exports.validationErrorFormatter = validationErrorFormatter;

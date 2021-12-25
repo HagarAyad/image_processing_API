@@ -1,4 +1,4 @@
-import { query } from 'express-validator';
+import { query, ValidationError } from 'express-validator';
 
 const fileNameValidator = query('fileName')
   .notEmpty()
@@ -18,4 +18,13 @@ const widthValidator = query('width')
   .isNumeric()
   .withMessage('Width must be number');
 
-export { fileNameValidator, heightValidator, widthValidator };
+const validationErrorFormatter = ({ msg, param }: ValidationError) => {
+  return `${param}: ${msg}`;
+};
+
+export {
+  fileNameValidator,
+  heightValidator,
+  widthValidator,
+  validationErrorFormatter,
+};
