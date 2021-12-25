@@ -1,11 +1,12 @@
 import supertest from 'supertest';
+import imgResizeService from '../routes/api/imageRoute/imageRoute.service';
 import * as fs from 'fs-extra';
 import path from 'path';
 import app from '../index';
 
 const request = supertest(app);
 
-describe('Test imageResize api : ', () => {
+describe('Test imageResize API : ', () => {
   it('should have file name', async (done) => {
     const response = await request.get(`/image?width=200&height=200`);
     expect(response.status).toBe(400);
@@ -60,6 +61,34 @@ describe('Test imageResize api : ', () => {
     if (files.includes('fjord_300_300.jpg')) {
       expect(response.status).toBe(200);
     }
+    done();
+  });
+});
+
+describe('Test imageResize Service : ', () => {
+  it('check allowed file name', async (done) => {
+    const imgResizeSrv = new imgResizeService();
+    const shouldImgExist = await imgResizeSrv.checkAllowedFileName('fjord');
+    const shouldntImgExist = await imgResizeSrv.checkAllowedFileName('x');
+    expect(shouldImgExist).toBeTrue();
+    expect(shouldntImgExist).toBeFalse();
+    done();
+  });
+  it('retrieve allowed files name', (done) => {
+    const imgResizeSrv = new imgResizeService();
+    const allowedNames = imgResizeSrv.getAllowedFilesName();
+    expect(allowedNames).toContain('fjord');
+    expect(allowedNames).toContain('icelandwaterfall');
+    expect(allowedNames).toContain('encenadaport');
+    expect(allowedNames).toContain('palmtunnel');
+    expect(allowedNames).toContain('santamonica');
+    done();
+  });
+  it('retrieve Resized image', async (done) => {
+    const imgResizeSrv = new imgResizeService();
+    await imgResizeSrv.getResizedImagePath('fjord', '50', '50');
+    const files = fs.readdirSync(path.resolve('assets', 'resizedImgs'));
+    expect(files.includes('fjord_50_50.jpg')).toBeTrue();
     done();
   });
 });
