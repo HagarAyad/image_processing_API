@@ -23,7 +23,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd image_API
+  cd image_processing_API
 ```
 
 Install dependencies
